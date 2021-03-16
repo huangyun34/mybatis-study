@@ -2,4 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.my.mybatis.dao.AdminUserMapper">
 
+    <select id="selectByNickname" resultType="com.my.mybatis.domain.AdminUser">
+        select * from land_admin_user
+        <where>
+            <if test="nickname != null">
+                and nickname = #{nickname}
+            </if>
+        </where>
+
+    </select>
 </mapper>

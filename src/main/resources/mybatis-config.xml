@@ -75,11 +75,10 @@
     </settings>
     <typeAliases>
         <!--        <typeAlias type="cn.enjoy.pojo.ConsultConfigArea" alias="Area"/>-->
-        <package name="com.my.mybatis.domain"/>
+        <package name="com.my.mybatis"/>
     </typeAliases>
     <plugins>
         <plugin interceptor="PagePlugin">
-            <property name="name" value="Jack"/>
         </plugin>
     </plugins>
     <environments default="development">
@@ -129,8 +128,8 @@
         <property name="MySQL" value="mysql" />
     </databaseIdProvider>
     <mappers>
-        <mapper resource="xml/CommomMapper.xml"/>
-        <mapper resource="xml/TUser1Mapper.xml"/>
+        <mapper resource="xml/AdminUserMapper.xml"/>
+        <!--<mapper resource="xml/TUser1Mapper.xml"/>-->
         <!--        <package name="cn.enjoy.dao"/>-->
     </mappers>
 

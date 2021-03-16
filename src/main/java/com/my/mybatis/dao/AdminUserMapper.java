@@ -13,4 +13,6 @@ public interface AdminUserMapper {
 
     @Select("select * from land_admin_user where is_delete = #{isDelete}")
     List<AdminUser> selectByIsDelete(@Param("isDelete") Integer isDelete);
+
+    List<AdminUser> selectByNickname(@Param("nickname") String nickname);
 }
