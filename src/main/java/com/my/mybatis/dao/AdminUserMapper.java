@@ -15,4 +15,6 @@ public interface AdminUserMapper {
     List<AdminUser> selectByIsDelete(@Param("isDelete") Integer isDelete);
 
     List<AdminUser> selectByNickname(@Param("nickname") String nickname);
+
+    List<AdminUser> selectByUsername(@Param("username") String username);
 }

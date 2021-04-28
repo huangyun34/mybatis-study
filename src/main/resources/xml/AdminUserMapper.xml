@@ -11,4 +11,8 @@
         </where>
 
     </select>
+
+    <select id="selectByUsername" resultType="com.my.mybatis.domain.AdminUser">
+        select * from land_admin_user where username = #{username}
+    </select>
 </mapper>

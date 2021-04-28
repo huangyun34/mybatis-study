@@ -7,6 +7,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -17,6 +18,8 @@ import java.io.InputStream;
  */
 public class AppTest
 {
+
+    private static Logger logger = Logger.getLogger(AppTest.class);
 
     /**
      * Rigorous Test :-)
@@ -29,6 +32,8 @@ public class AppTest
 
     @Test
     public void test1() {
+        logger.info("12323");
+        logger.debug("gjjf");
         String resource = "mybatis-config.xml";
         InputStream inputStream = null;
         try {
@@ -38,7 +43,7 @@ public class AppTest
         }
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         SqlSession sqlSession = sqlSessionFactory.openSession();
-        System.out.println(sqlSession.selectList("com.my.mybatis.dao.AdminUserMapper.selectById", 31317372L));
+//        System.out.println(sqlSession.selectList("com.my.mybatis.dao.AdminUserMapper.selectById", 31317372L));
         AdminUserMapper mapper = sqlSession.getMapper(AdminUserMapper.class);
         System.out.println(mapper.selectById(31317372L));
     }

@@ -11,8 +11,9 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.Alias;
 
 
-@Intercepts({ @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class,
-        RowBounds.class, ResultHandler.class }) })
+@Intercepts(
+        { @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class }) }
+    )
 @Alias("PagePlugin")
 public class PagePlugin implements Interceptor {
 
