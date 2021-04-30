@@ -3,6 +3,7 @@ package com.my.mybatis.plugin;
 import com.my.mybatis.anno.DESField;
 import com.my.mybatis.handles.AESHandle;
 import com.my.mybatis.handles.DESHandle;
+import lombok.AllArgsConstructor;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -11,7 +12,7 @@ abstract class AbstractMybatisPlugin {
 
     private static final List<DESHandle> HANDLES = new ArrayList<>();
 
-    private static final Map<String, List<Class<?>>> CLASS_METHOD_PARAM = new HashMap<>();
+    private static final Map<String, SpecialMethodInfo> CLASS_METHOD_PARAM = new HashMap<>();
 
     static {
         HANDLES.add(new AESHandle());
@@ -70,11 +71,20 @@ abstract class AbstractMybatisPlugin {
         }
     }
 
-    void putClassMethodParam(String id, List<Class<?>> classes) {
-        CLASS_METHOD_PARAM.put(id, classes);
+    void putClassMethodParam(String id, SpecialMethodInfo specialMethodInfo) {
+        CLASS_METHOD_PARAM.put(id, specialMethodInfo);
     }
 
-    List<Class<?>> getClassMethodParam(String id) {
+    SpecialMethodInfo getClassMethodParam(String id) {
         return CLASS_METHOD_PARAM.get(id);
+    }
+
+    /**
+     * 特殊处理信息
+     */
+    @AllArgsConstructor
+    class SpecialMethodInfo {
+        Boolean need;
+        List<Class<?>> classes;
     }
 }

@@ -5,9 +5,9 @@ import java.lang.annotation.*;
 /**
  * @author huangyun
  */
-@Target({ElementType.FIELD})
+@Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface DESField {
+public @interface DESParameter {
     String value() default "AES";
 }

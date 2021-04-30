@@ -78,11 +78,9 @@ public class AppTest
         }
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         SqlSession sqlSession = sqlSessionFactory.openSession();
-//        System.out.println(sqlSession.selectList("com.my.mybatis.dao.AdminUserMapper.selectById", 31317372L));
         AdminUserMapper mapper = sqlSession.getMapper(AdminUserMapper.class);
         int row = mapper.update("15599999999", 31317372L);
         System.out.println(row);
-//        System.out.println(mapper.selectById(31317372L));
     }
 
     @Test
@@ -105,5 +103,25 @@ public class AppTest
         int row = mapper.updateDomain(adminUser);
         System.out.println(row);
 //        System.out.println(mapper.selectById(31317372L));
+    }
+
+    @Test
+    public void test5() {
+
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = null;
+        try {
+            inputStream = Resources.getResourceAsStream(resource);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        AdminUserMapper mapper = sqlSession.getMapper(AdminUserMapper.class);
+        AdminUser adminUser = new AdminUser();
+        adminUser.setId(19867673L);
+        adminUser.setMobile("18176567636");
+        int row = mapper.insertSelective(adminUser);
+        System.out.println(row);
     }
 }
