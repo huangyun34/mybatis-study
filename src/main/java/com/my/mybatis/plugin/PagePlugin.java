@@ -15,7 +15,7 @@ import org.apache.ibatis.type.Alias;
         { @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class }) }
     )
 @Alias("PagePlugin")
-public class PagePlugin implements Interceptor {
+public class PagePlugin extends AbstractMybatisPlugin implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {

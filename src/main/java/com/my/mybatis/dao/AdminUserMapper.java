@@ -1,8 +1,11 @@
 package com.my.mybatis.dao;
 
+import com.my.mybatis.anno.DESDomain;
+import com.my.mybatis.anno.DESField;
 import com.my.mybatis.domain.AdminUser;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -17,4 +20,13 @@ public interface AdminUserMapper {
     List<AdminUser> selectByNickname(@Param("nickname") String nickname);
 
     List<AdminUser> selectByUsername(@Param("username") String username);
+
+    int insert(AdminUser adminUser);
+
+    @DESDomain
+    @Update("update land_admin_user set mobile = #{mobile} where id = #{id}")
+    int update(@DESField @Param("mobile") String mobile, @Param("id") Long id);
+
+    @Update("update land_admin_user set mobile = #{mobile} where id = #{id}")
+    int updateDomain(AdminUser adminUser);
 }

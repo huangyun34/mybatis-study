@@ -78,8 +78,11 @@
         <package name="com.my.mybatis"/>
     </typeAliases>
     <plugins>
-        <plugin interceptor="PagePlugin">
-        </plugin>
+        <!--<plugin interceptor="PagePlugin"/>-->
+        <plugin interceptor="ResultPlugin"/>
+        <!--<plugin interceptor="ParamPlugin"/>-->
+        <!--<plugin interceptor="StatementPlugin"/>-->
+        <plugin interceptor="ExecutorPlugin"/>
     </plugins>
     <environments default="development">
         <environment id="development">

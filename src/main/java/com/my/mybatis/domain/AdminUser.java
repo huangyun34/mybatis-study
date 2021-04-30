@@ -1,10 +1,13 @@
 package com.my.mybatis.domain;
 
+import com.my.mybatis.anno.DESDomain;
+import com.my.mybatis.anno.DESField;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@DESDomain
 public class AdminUser {
 
     private static final long serialVersionUID = 1L;
@@ -46,6 +49,7 @@ public class AdminUser {
     /**
      * 手机号
      */
+    @DESField
     private String mobile;
     /**
      * 用户状态
