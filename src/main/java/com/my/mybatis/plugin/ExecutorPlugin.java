@@ -44,37 +44,48 @@ public class ExecutorPlugin extends AbstractMybatisPlugin implements Interceptor
         MappedStatement arg0 = (MappedStatement)invocation.getArgs()[0];
         Object a1 = invocation.getArgs()[1];
         if (a1 instanceof MapperMethod.ParamMap) {
-            MapperMethod.ParamMap arg1 = (MapperMethod.ParamMap)invocation.getArgs()[1];
-            String id = arg0.getId();
-            String classStr = id.substring(0, id.lastIndexOf("."));
-            String methodStr = id.substring(id.lastIndexOf(".") + 1);
-            SpecialMethodInfo specialMethodInfo = getClassMethodParam(id);
-            List<Class<?>> classes;
-            boolean cache = false;
-            if (specialMethodInfo == null) {
-                cache = true;
-                List<ParameterMapping> parameterMappings = arg0.getBoundSql(arg1).getParameterMappings();
-                List<Class<?>> params = new ArrayList<>();
-                if (!CollectionUtils.isEmpty(parameterMappings)) {
-                    for (Map.Entry<String, Object> entry : (Set<Map.Entry<String,Object>>)arg1.entrySet()) {
-                        for (ParameterMapping parameterMapping: parameterMappings) {
-                            if (entry.getKey().equals(parameterMapping.getProperty())){
-                                params.add(entry.getValue().getClass());
-                                break;
-                            }
-                        }
-                    }
+            //要想实现加密，需要参数需要传地对象，对象上需要有@DESDomain，加密字段需要有@DESField
+            MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) a1;
+            for (Object value : paramMap.values()) {
+                Class<?> aClass = value.getClass();
+                DESDomain desDomain = AnnotationUtils.findAnnotation(aClass, DESDomain.class);
+                if (desDomain != null) {
+                    encrypt(value, aClass);
                 }
-                classes = params;
-            } else {
-                classes = specialMethodInfo.classes;
             }
-            //反射找到有注解的字段并处理,返回是否匹配特殊富豪
-            boolean match = handle(classStr, methodStr, classes, arg1);
-            //信息加入缓存
-            if (cache) {
-                putClassMethodParam(id, new SpecialMethodInfo(match, match ? classes : null));
-            }
+
+            //暂时无法解决param传参数问题，注视掉
+//            MapperMethod.ParamMap arg1 = (MapperMethod.ParamMap)a1;
+//            String id = arg0.getId();
+//            String classStr = id.substring(0, id.lastIndexOf("."));
+//            String methodStr = id.substring(id.lastIndexOf(".") + 1);
+//            SpecialMethodInfo specialMethodInfo = getClassMethodParam(id);
+//            List<Class<?>> classes;
+//            boolean cache = false;
+//            if (specialMethodInfo == null) {
+//                cache = true;
+//                List<ParameterMapping> parameterMappings = arg0.getBoundSql(arg1).getParameterMappings();
+//                List<Class<?>> params = new ArrayList<>();
+//                if (!CollectionUtils.isEmpty(parameterMappings)) {
+//                    for (Map.Entry<String, Object> entry : (Set<Map.Entry<String,Object>>)arg1.entrySet()) {
+//                        for (ParameterMapping parameterMapping: parameterMappings) {
+//                            if (entry.getKey().equals(parameterMapping.getProperty())){
+//                                params.add(entry.getValue().getClass());
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+//                classes = params;
+//            } else {
+//                classes = specialMethodInfo.classes;
+//            }
+//            //反射找到有注解的字段并处理,返回是否匹配特殊富豪
+//            boolean match = handle(classStr, methodStr, classes, arg1);
+//            //信息加入缓存
+//            if (cache) {
+//                putClassMethodParam(id, new SpecialMethodInfo(match, match ? classes : null));
+//            }
         } else {
             Class<?> parameterObjectClass = a1.getClass();
             DESDomain desDomain = AnnotationUtils.findAnnotation(parameterObjectClass, DESDomain.class);
