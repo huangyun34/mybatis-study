@@ -5,6 +5,7 @@ import com.my.mybatis.anno.DESField;
 import com.my.mybatis.domain.AdminUser;
 import com.my.mybatis.handles.AESHandle;
 import com.my.mybatis.handles.DESHandle;
+import com.my.mybatis.utils.MybatisProxyUtils;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
@@ -23,9 +24,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 @Intercepts(
@@ -41,23 +40,45 @@ public class StatementPlugin extends AbstractMybatisPlugin implements Intercepto
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        System.out.println(2);
+        //有些情况会拿到动态代理对象，需要从中获取代理的对象
+//        RoutingStatementHandler jdkDynamicProxyTargetObject = MybatisProxyUtils.getJdkDynamicProxyTargetObject(invocation.getTarget());
         RoutingStatementHandler routingStatementHandler = (RoutingStatementHandler) invocation.getTarget();
         Object parameterObject = routingStatementHandler.getBoundSql().getParameterObject();
-        if (null != parameterObject && !(parameterObject instanceof MapperMethod.ParamMap)) {
-            Class<?> parameterObjectClass = parameterObject.getClass();
-            DESDomain desDomain = AnnotationUtils.findAnnotation(parameterObjectClass, DESDomain.class);
-            if (desDomain != null) {
-                decrypt(parameterObject, parameterObjectClass);
+        if (null != parameterObject) {
+            if (parameterObject instanceof MapperMethod.ParamMap) {
+                Set<Object> set = new HashSet<>();
+                MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) parameterObject;
+                for (Object value : paramMap.values()) {
+                    if (value == null) {
+                        continue;
+                    }
+                    //防止同一个对象重复处理
+                    if (set.contains(value)) {
+                        continue;
+                    }
+                    Class<?> aClass = value.getClass();
+                    DESDomain desDomain = AnnotationUtils.findAnnotation(aClass, DESDomain.class);
+                    if (desDomain != null) {
+                        decrypt(value, aClass);
+                    }
+                    set.add(value);
+                }
+            } else {
+                Class<?> parameterObjectClass = parameterObject.getClass();
+                DESDomain desDomain = AnnotationUtils.findAnnotation(parameterObjectClass, DESDomain.class);
+                if (desDomain != null) {
+                    decrypt(parameterObject, parameterObjectClass);
+                }
             }
         }
+        return invocation.proceed();
 //        RoutingStatementHandler target = (RoutingStatementHandler)invocation.getTarget();
 //        BoundSql boundSql = target.getBoundSql();
 //        List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
 //        for (ParameterMapping parameterMapping : parameterMappings) {
 //            System.out.println(parameterMapping.getProperty());
 //        }
-        return invocation.proceed();
+//        return invocation.proceed();
     }
 
 }

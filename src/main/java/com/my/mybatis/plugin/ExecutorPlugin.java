@@ -53,8 +53,13 @@ public class ExecutorPlugin extends AbstractMybatisPlugin implements Interceptor
             if (a1 instanceof MapperMethod.ParamMap) {
                 //要想实现加密，需要参数需要传地对象，对象上需要有@DESDomain，加密字段需要有@DESField
                 MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) a1;
+                Set<Object> set = new HashSet<>();
                 for (Object value : paramMap.values()) {
                     if (value == null) {
+                        continue;
+                    }
+                    //防止同一个对象重复处理
+                    if (set.contains(value)) {
                         continue;
                     }
                     Class<?> aClass = value.getClass();
@@ -62,6 +67,7 @@ public class ExecutorPlugin extends AbstractMybatisPlugin implements Interceptor
                     if (desDomain != null) {
                         encrypt(value, aClass);
                     }
+                    set.add(value);
                 }
 
                 //暂时无法解决param传参数问题，注视掉
