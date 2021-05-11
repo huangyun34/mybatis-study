@@ -42,32 +42,27 @@ public class ParamPlugin extends AbstractMybatisPlugin implements Interceptor {
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
 
-//        PreparedStatement ms = (PreparedStatement) invocation.getArgs()[0];
-//        if (!ms.getSqlCommandType().equals(SqlCommandType.INSERT)
-//                || !ms.getSqlCommandType().equals(SqlCommandType.UPDATE)) {
-//            return invocation.proceed();
-//        }
-//        ParameterHandler parameterHandler = (ParameterHandler) invocation.getTarget();
-//        Field paramsFiled = parameterHandler.getClass().getDeclaredField("parameterObject");
-//        paramsFiled.setAccessible(true);
-//
-//        Object parameterObject = paramsFiled.get(parameterHandler);
-//        if (parameterObject != null) {
-//            if (parameterObject instanceof MapperMethod.ParamMap) {
-//
-////                (DefaultParameterHandler)parameterHandler.
-////                ReflectorFactory reflectorFactory = ((DefaultParameterHandler) parameterHandler).boundSql.metaParameters.reflectorFactory;
+        ParameterHandler parameterHandler = (ParameterHandler) invocation.getTarget();
+        Field paramsFiled = parameterHandler.getClass().getDeclaredField("parameterObject");
+        paramsFiled.setAccessible(true);
+
+        Object parameterObject = paramsFiled.get(parameterHandler);
+        if (parameterObject != null) {
+            if (parameterObject instanceof MapperMethod.ParamMap) {
+
+//                (DefaultParameterHandler)parameterHandler.
+//                ReflectorFactory reflectorFactory = ((DefaultParameterHandler) parameterHandler).boundSql.metaParameters.reflectorFactory;
 //                MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) parameterObject;
 //                Object mobile = paramMap.get("mobile");
 //                System.out.println(mobile);
-//            } else {
-//                Class<?> parameterObjectClass = parameterObject.getClass();
-//                DESDomain desDomain = AnnotationUtils.findAnnotation(parameterObjectClass, DESDomain.class);
-//                if (desDomain != null) {
-//                    encrypt(parameterObject, parameterObjectClass);
-//                }
-//            }
-//        }
+            } else {
+                Class<?> parameterObjectClass = parameterObject.getClass();
+                DESDomain desDomain = AnnotationUtils.findAnnotation(parameterObjectClass, DESDomain.class);
+                if (desDomain != null) {
+                    encrypt(parameterObject, parameterObjectClass);
+                }
+            }
+        }
         return invocation.proceed();
     }
 }

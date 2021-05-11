@@ -52,20 +52,29 @@ abstract class AbstractMybatisPlugin {
     void decrypt(ArrayList list, Class<?> aClass) {
         Field[] declaredFields = aClass.getDeclaredFields();;
         for (Object result : list) {
-            for (Field field : declaredFields) {
-                field.setAccessible(true);
-                DESField desField = field.getAnnotation(DESField.class);
-                if (desField != null) {
-                    DESHandle desHandle = getDESHandle(desField.value());
-                    try {
-                        Object value = field.get(result);
-                        if (value instanceof String) {
-                            field.set(result, desHandle.decrypt((String) value));
-                        }
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                        throw new RuntimeException("内部错误");
+            handle(declaredFields, result);
+        }
+    }
+
+    void decrypt(Object result, Class<?> aClass) {
+        Field[] declaredFields = aClass.getDeclaredFields();
+        handle(declaredFields, result);
+    }
+
+    private void handle(Field[] declaredFields, Object result) {
+        for (Field field : declaredFields) {
+            field.setAccessible(true);
+            DESField desField = field.getAnnotation(DESField.class);
+            if (desField != null) {
+                DESHandle desHandle = getDESHandle(desField.value());
+                try {
+                    Object value = field.get(result);
+                    if (value instanceof String) {
+                        field.set(result, desHandle.decrypt((String) value));
                     }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("内部错误");
                 }
             }
         }

@@ -101,6 +101,7 @@ public class AppTest
         adminUser.setId(31317372L);
         adminUser.setMobile("15599999999");
         int row = mapper.updateDomain(adminUser);
+        System.out.println(adminUser.getMobile());
         System.out.println(row);
 //        System.out.println(mapper.selectById(31317372L));
     }

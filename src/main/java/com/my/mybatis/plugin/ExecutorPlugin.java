@@ -39,22 +39,32 @@ import java.util.*;
 @Alias("ExecutorPlugin")
 public class ExecutorPlugin extends AbstractMybatisPlugin implements Interceptor {
 
+    /**
+     * 不能在这里做对象处理，可能引起对象改变
+     * @param invocation
+     * @return
+     * @throws Throwable
+     */
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         MappedStatement arg0 = (MappedStatement)invocation.getArgs()[0];
         Object a1 = invocation.getArgs()[1];
-        if (a1 instanceof MapperMethod.ParamMap) {
-            //要想实现加密，需要参数需要传地对象，对象上需要有@DESDomain，加密字段需要有@DESField
-            MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) a1;
-            for (Object value : paramMap.values()) {
-                Class<?> aClass = value.getClass();
-                DESDomain desDomain = AnnotationUtils.findAnnotation(aClass, DESDomain.class);
-                if (desDomain != null) {
-                    encrypt(value, aClass);
+        if (null != a1) {
+            if (a1 instanceof MapperMethod.ParamMap) {
+                //要想实现加密，需要参数需要传地对象，对象上需要有@DESDomain，加密字段需要有@DESField
+                MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) a1;
+                for (Object value : paramMap.values()) {
+                    if (value == null) {
+                        continue;
+                    }
+                    Class<?> aClass = value.getClass();
+                    DESDomain desDomain = AnnotationUtils.findAnnotation(aClass, DESDomain.class);
+                    if (desDomain != null) {
+                        encrypt(value, aClass);
+                    }
                 }
-            }
 
-            //暂时无法解决param传参数问题，注视掉
+                //暂时无法解决param传参数问题，注视掉
 //            MapperMethod.ParamMap arg1 = (MapperMethod.ParamMap)a1;
 //            String id = arg0.getId();
 //            String classStr = id.substring(0, id.lastIndexOf("."));
@@ -86,11 +96,12 @@ public class ExecutorPlugin extends AbstractMybatisPlugin implements Interceptor
 //            if (cache) {
 //                putClassMethodParam(id, new SpecialMethodInfo(match, match ? classes : null));
 //            }
-        } else {
-            Class<?> parameterObjectClass = a1.getClass();
-            DESDomain desDomain = AnnotationUtils.findAnnotation(parameterObjectClass, DESDomain.class);
-            if (desDomain != null) {
-                encrypt(a1, parameterObjectClass);
+            } else {
+                Class<?> parameterObjectClass = a1.getClass();
+                DESDomain desDomain = AnnotationUtils.findAnnotation(parameterObjectClass, DESDomain.class);
+                if (desDomain != null) {
+                    encrypt(a1, parameterObjectClass);
+                }
             }
         }
         return invocation.proceed();

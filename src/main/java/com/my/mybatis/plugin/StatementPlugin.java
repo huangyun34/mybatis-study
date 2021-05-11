@@ -29,13 +29,28 @@ import java.util.List;
 
 
 @Intercepts(
-        { @Signature(type = StatementHandler.class, method = "parameterize", args = { Statement.class }) }
+        {
+//                @Signature(type = StatementHandler.class, method = "parameterize", args = { Statement.class }),
+//                @Signature(type = StatementHandler.class, method = "getBoundSql", args = {}),
+                //在sql执行后，修改想要处理的值
+                @Signature(type = StatementHandler.class, method = "update", args = {Statement.class})
+        }
     )
 @Alias("StatementPlugin")
-public class StatementPlugin implements Interceptor {
+public class StatementPlugin extends AbstractMybatisPlugin implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
+        System.out.println(2);
+        RoutingStatementHandler routingStatementHandler = (RoutingStatementHandler) invocation.getTarget();
+        Object parameterObject = routingStatementHandler.getBoundSql().getParameterObject();
+        if (null != parameterObject && !(parameterObject instanceof MapperMethod.ParamMap)) {
+            Class<?> parameterObjectClass = parameterObject.getClass();
+            DESDomain desDomain = AnnotationUtils.findAnnotation(parameterObjectClass, DESDomain.class);
+            if (desDomain != null) {
+                decrypt(parameterObject, parameterObjectClass);
+            }
+        }
 //        RoutingStatementHandler target = (RoutingStatementHandler)invocation.getTarget();
 //        BoundSql boundSql = target.getBoundSql();
 //        List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();

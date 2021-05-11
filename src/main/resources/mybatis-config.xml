@@ -81,7 +81,7 @@
         <!--<plugin interceptor="PagePlugin"/>-->
         <plugin interceptor="ResultPlugin"/>
         <!--<plugin interceptor="ParamPlugin"/>-->
-        <!--<plugin interceptor="StatementPlugin"/>-->
+        <plugin interceptor="StatementPlugin"/>
         <plugin interceptor="ExecutorPlugin"/>
     </plugins>
     <environments default="development">
