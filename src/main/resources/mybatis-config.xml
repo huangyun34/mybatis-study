@@ -77,6 +77,9 @@
         <!--        <typeAlias type="cn.enjoy.pojo.ConsultConfigArea" alias="Area"/>-->
         <package name="com.my.mybatis"/>
     </typeAliases>
+    <typeHandlers>
+        <typeHandler javaType="com.my.mybatis.typehandler.bo.AESObject" handler="com.my.mybatis.typehandler.AESObjectTypeHandler"/>
+    </typeHandlers>
     <plugins>
         <!--<plugin interceptor="PagePlugin"/>-->
         <plugin interceptor="ResultPlugin"/>
@@ -105,6 +108,7 @@
             <!--</dataSource>-->
         <!--</environment>-->
     </environments>
+
     <!--    <typeHandlers>
             &lt;!&ndash;
                 当配置package的时候，mybatis会去配置的package扫描TypeHandler
@@ -135,5 +139,4 @@
         <!--<mapper resource="xml/TUser1Mapper.xml"/>-->
         <!--        <package name="cn.enjoy.dao"/>-->
     </mappers>
-
 </configuration>

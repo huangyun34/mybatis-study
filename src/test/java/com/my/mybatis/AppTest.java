@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import com.my.mybatis.dao.AdminUserMapper;
 import com.my.mybatis.domain.AdminUser;
+import com.my.mybatis.domain.AdminUserUseTypeHandler;
+import com.my.mybatis.typehandler.bo.AESObject;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -13,6 +15,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * Unit test for simple App.
@@ -79,7 +82,7 @@ public class AppTest
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         SqlSession sqlSession = sqlSessionFactory.openSession();
         AdminUserMapper mapper = sqlSession.getMapper(AdminUserMapper.class);
-        int row = mapper.update("15599999999", 31317372L);
+        int row = mapper.update(new AESObject("15599999999"), 31317372L);
         System.out.println(row);
     }
 
@@ -124,5 +127,45 @@ public class AppTest
         adminUser.setMobile("18176567636");
         int row = mapper.insertSelective(adminUser);
         System.out.println(row);
+    }
+
+    @Test
+    public void test6() {
+
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = null;
+        try {
+            inputStream = Resources.getResourceAsStream(resource);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        AdminUserMapper mapper = sqlSession.getMapper(AdminUserMapper.class);
+        AdminUserUseTypeHandler adminUser = new AdminUserUseTypeHandler();
+        adminUser.setId(19867673L);
+        adminUser.setMobile(new AESObject("18176567636"));
+        adminUser.setCreatedBy("1");
+        adminUser.setUpdatedBy("2");
+        int row = mapper.insertSelectiveUseTypeHandler(adminUser);
+        System.out.println(adminUser);
+        System.out.println(row);
+    }
+
+    @Test
+    public void test7() {
+
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = null;
+        try {
+            inputStream = Resources.getResourceAsStream(resource);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        AdminUserMapper mapper = sqlSession.getMapper(AdminUserMapper.class);
+        List<AdminUserUseTypeHandler> adminUsers = mapper.selectByMobile(new AESObject("13120210001"));
+        System.out.println(adminUsers);
     }
 }
