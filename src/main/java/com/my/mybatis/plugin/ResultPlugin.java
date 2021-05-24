@@ -37,9 +37,11 @@ public class ResultPlugin extends AbstractMybatisPlugin implements Interceptor {
         if (proceed instanceof List) {
             List proceed1 = (List) proceed;
             if (proceed1.size() != 0) {
-                Class<?> aClass = ((List) proceed).get(0).getClass();
-                if (AnnotationUtils.findAnnotation(aClass, DESDomain.class) != null) {
-                    decrypt((ArrayList) proceed, aClass);
+                if (proceed1.get(0) != null) {
+                    Class<?> aClass = proceed1.get(0).getClass();
+                    if (AnnotationUtils.findAnnotation(aClass, DESDomain.class) != null) {
+                        decrypt((ArrayList) proceed, aClass);
+                    }
                 }
             }
         } else {
