@@ -82,10 +82,12 @@
     </typeHandlers>
     <plugins>
         <!--<plugin interceptor="PagePlugin"/>-->
-        <plugin interceptor="ResultPlugin"/>
+        <!--<plugin interceptor="ResultPlugin"/>-->
         <!--<plugin interceptor="ParamPlugin"/>-->
-        <plugin interceptor="StatementPlugin"/>
-        <plugin interceptor="ExecutorPlugin"/>
+        <!--<plugin interceptor="StatementPlugin"/>-->
+        <!--<plugin interceptor="ExecutorPlugin"/>-->
+        <plugin interceptor="TestExecutorPlugin"/>
+        <plugin interceptor="TestStatementPlugin"/>
     </plugins>
     <environments default="development">
         <environment id="development">

@@ -125,6 +125,8 @@ public class AppTest
         AdminUser adminUser = new AdminUser();
         adminUser.setId(19867673L);
         adminUser.setMobile("18176567636");
+        adminUser.setCreatedBy("");
+        adminUser.setUpdatedBy("");
         int row = mapper.insertSelective(adminUser);
         System.out.println(row);
     }

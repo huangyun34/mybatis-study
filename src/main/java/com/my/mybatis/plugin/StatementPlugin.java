@@ -31,7 +31,7 @@ import java.util.*;
         {
 //                @Signature(type = StatementHandler.class, method = "parameterize", args = { Statement.class }),
 //                @Signature(type = StatementHandler.class, method = "getBoundSql", args = {}),
-                //在sql执行后，修改想要处理的值
+                //在sql执行前，修改想要处理的值
                 @Signature(type = StatementHandler.class, method = "update", args = {Statement.class})
         }
     )
